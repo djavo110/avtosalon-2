@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mashina ma'lumotlari</title>
+    <style>
+      body {
+        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .card {
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-header {
+        background: #1976d2;
+        color: rgb(37, 34, 34);
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 15px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        margin: 10px 0;
+        color: #333;
+      }
+
+      .card-text {
+        font-size: 0.95rem;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      img {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-danger {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 30px;
+        background: #e53935;
+        border: none;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+
+      .btn-danger:hover {
+        background: #c62828;
+        transform: scale(1.05);
+      }
+
+      h2 {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #222;
+      }
+
+      p {
+        margin: 5px 0;
+      }
+
+      .qr-container {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .qr-container img {
+        border: 2px solid #1976d2;
+        padding: 10px;
+        border-radius: 12px;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="card mx-auto" style="max-width: 800px">
+        <div class="card-header">{{car.brend}}</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6 text-center">
+              <img src="/media/347174214024991.webp" alt="" width="100%" />
+            </div>
+            <div class="col-6">
+              <h5 class="card-title">🚗 Model: {{car.model}}</h5>
+              <h5 class="card-title">🎨 Rang: {{car.color}}</h5>
+              <h5 class="card-title">💰 Narxi: {{car.price}} $</h5>
+              <h5 class="card-title">📅 Yil: {{car.year}}</h5>
+              <p class="card-text">
+                {{car.context |safe|linebreaks|truncatewords:50}}
+              </p>
+              <h2>{{ car.title }}</h2>
+              <p>{{ car.brend.name }}</p>
+              <div class="qr-container">
+                <img src="data:image/png;base64,{{ qr_code }}" width="200px" alt="QR Code" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center pb-4">
+          <a
+            href="{% url 'car_pdf' car.pk %}"
+            class="btn btn-danger"
+            target="_blank"
+          >
+            ⬇️ Yuklab olish
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .car-info { margin-bottom: 20px; }
+        .qr { margin-top: 20px; }
+        img { max-width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Car Information</h1>
+    <div class="car-info">
+        <p><b>Brend:</b> {{ car.brend }}</p>
+        <p><b>Model:</b> {{ car.model }}</p>
+        <p><b>Brend:</b> {{ car.color }}</p>
+        <p><b>Narx:</b> {{ car.price }}$</p>
+        <p><b>Brend:</b> {{ car.context }}</p>
+    </div>
+
+    {% if car.image %}
+        <div class="car-image">
+            <h3>Rasm:</h3>
+            <img src="/media/347174214024991.webp">
+        </div>
+    {% endif %}
+
+    <div class="qr">
+        <h3>QR Code:</h3>
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+    </div>
+</body>
+</html>
