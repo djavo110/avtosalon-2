@@ -106,7 +106,7 @@
         <div class="col-md-3">
           <ul class="list-group text-center">
             <li class="list-group-item active" aria-current="true">Category</li>
-            {% for item in car %}
+            {% for item in brend %}
             <li class="list-group-item">
               <a href="{% url 'category' item.pk %}">{{ item.title }}</a>
             </li>
@@ -118,7 +118,7 @@
         <div class="col-md-9">
           {% for item in cars %}
           <div class="card mb-4">
-            <div class="card-header">{{item.category.title}}</div>
+            <div class="card-header">{{item.brend.title}}</div>
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col-md-6">

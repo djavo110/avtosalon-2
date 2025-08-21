@@ -97,7 +97,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-6 text-center">
-              <img src="/media/347174214024991.webp" alt="" width="100%" />
+                  {% if item.image %}
+                  <img src="{{ item.image.url }}" class="img-fluid"/>
+                  {% else %}
+                  <img src="https://picsum.photos/400/250" class="img-fluid"/>
+                  {% endif %}
             </div>
             <div class="col-6">
               <h5 class="card-title">🚗 Model: {{car.model}}</h5>

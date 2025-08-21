@@ -8,6 +8,9 @@ import qrcode
 import base64
 from io import BytesIO
 from weasyprint import HTML
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
 
 def index(request):
     word = request.GET.get('word', '').strip()
@@ -17,12 +20,10 @@ def index(request):
         car = Car.objects.all()
     avtosalon = Avtosalon.objects.all()
     brend = Brend.objects.all()
-    cat = Category.objects.all()
     context = {
         "avtosalon": avtosalon,
         "brend": brend,
         "car": car,
-        "cat": cat,
         "title": "NEW TITLE"
     }
     return render(request, 'index.html', context)
@@ -35,13 +36,11 @@ def search_suggestions(request):
     return JsonResponse([], safe=False)
 
 def category(request, pk):
-    cars = Car.objects.filter(category__id = pk)
-    cat = Category.objects.all()
-    current_cat = get_object_or_404(Category, pk=pk) 
+    cars = Car.objects.filter(brend__id = pk)
+    brend = Brend.objects.all() 
     context = {
         "cars": cars,
-        "cat": cat,
-        "current_cat": current_cat,
+        "brend": brend
     }
     return render(request,  'category.html', context=context)
 
@@ -70,13 +69,11 @@ def detail_car(request, pk):
 
 def salon_car(request, brend_pk, salon_pk):
     cars = Car.objects.filter(brend= brend_pk, salon=salon_pk)
-    cat = Category.objects.all() 
     brend = Brend.objects.all()
     context = {
         "salon_pk":salon_pk,
         "cars": cars,
         "brend": brend,
-        "cat":cat
     }
     return render(request, 'salon_car.html', context)
 
@@ -116,3 +113,22 @@ def car_pdf(request, pk):
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="car_{car.pk}.pdf"'
     return response
+
+def login_views(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+            messages.success(request, 'ok!')
+
+        else:
+            messages.error(request, 'Login yoki parol xato!')     
+            
+    form = UserLoginForm()
+
+    return render(request, 'login.html', {'form': form})
