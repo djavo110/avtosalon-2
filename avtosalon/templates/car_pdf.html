@@ -11,24 +11,23 @@
 </head>
 <body>
     <h1>Car Information</h1>
+    <div class="car-image">
+        <img src="{{ car_image_url }}" alt="{{ car.model }}">
+    </div>
     <div class="car-info">
-        <p><b>Brend:</b> {{ car.brend }}</p>
+        <p><b>Brend:</b> {{ car.brend }}</p>    
         <p><b>Model:</b> {{ car.model }}</p>
         <p><b>Brend:</b> {{ car.color }}</p>
         <p><b>Narx:</b> {{ car.price }}$</p>
         <p><b>Brend:</b> {{ car.context }}</p>
     </div>
 
-    {% if car.image %}
-        <div class="car-image">
-            <h3>Rasm:</h3>
-            <img src="/media/347174214024991.webp">
-        </div>
-    {% endif %}
-
     <div class="qr">
         <h3>QR Code:</h3>
         <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+    </div>
+    <div class="car-link">
+        <p><a href="{{ car_link }}">{{ car_link }}</a></p>
     </div>
 </body>
 </html>

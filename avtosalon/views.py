@@ -92,19 +92,27 @@ def salon_car(request, brend_pk, salon_pk):
 def car_pdf(request, pk):
     car = get_object_or_404(Car, pk=pk)
 
+    base_url = request.build_absolute_uri('/').rstrip('/')
    
     qr_img = qrcode.make(f"{car.brend} {car.model} {car.price}$ {car.color} {car.context}")
     buffer = BytesIO()
     qr_img.save(buffer, format="PNG")
     qr_code_b64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-    
+    if car.image:  # Agar mashina rasmi mavjud bo'lsa
+        car_image_url = f"{base_url}{car.image.url}"
+    else:
+        car_image_url = f"{base_url}/static/default_car.jpg"
+
     html_string = render_to_string("car_pdf.html", {
         "car": car,
-        "qr_code": qr_code_b64,  
+        "qr_code": qr_base64,
+        "car_image_url": car_image_url,  # Rasm URL
+        "car_link": f"{base_url}/car/{car.pk}/"  # Mashina sahifasiga link
     })
 
-    pdf_file = HTML(string=html_string).write_pdf()
+    pdf_file = HTML(string=html_string, base_url=base_url).write_pdf()
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="car_{car.pk}.pdf"'
     return response

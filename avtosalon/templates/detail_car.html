@@ -6,7 +6,9 @@
     <title>Mashina ma'lumotlari</title>
     <style>
       body {
-        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        background-image: url("https://fainaidea.com/wp-content/uploads/2015/07/20070620170003.jpg");
+        background-size: cover;
+        background-position: center;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
 
@@ -107,8 +109,20 @@
               </p>
               <h2>{{ car.title }}</h2>
               <p>{{ car.brend.name }}</p>
+
               <div class="qr-container">
-                <img src="data:image/png;base64,{{ qr_code }}" width="200px" alt="QR Code" />
+                <a href="{{ car_link }}" target="_blank">
+                  <img
+                    src="data:image/png;base64,{{ qr_code }}"
+                    width="200px"
+                    alt="QR Code"
+                  />
+                </a>
+                <p>
+                  <a href="{{ car_link }}" target="_blank">
+                    🔗 Mashina sahifasiga o'tish
+                  </a>
+                </p>
               </div>
             </div>
           </div>
