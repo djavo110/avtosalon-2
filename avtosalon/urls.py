@@ -2,6 +2,7 @@ from django.urls import path
 from avtosalon.views import *
 
 urlpatterns = [
+    path('logout/', logout_view, name='logout'),
     path('', login_views, name='login'),
     path('/index', index, name='index'),
     path('add_car/', add_car, name='add_car'),

@@ -10,6 +10,7 @@ from io import BytesIO
 from weasyprint import HTML
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -132,3 +133,24 @@ def login_views(request):
     form = UserLoginForm()
 
     return render(request, 'login.html', {'form': form})
+
+@login_required(login_url='login')
+def index(request):
+    word = request.GET.get('word', '').strip()
+    if word:
+        car = Car.objects.filter(model__istartswith=word)
+    else:
+        car = Car.objects.all()
+    avtosalon = Avtosalon.objects.all()
+    brend = Brend.objects.all()
+    context = {
+        "avtosalon": avtosalon,
+        "brend": brend,
+        "car": car,
+        "title": "NEW TITLE"
+    }
+    return render(request, 'index.html', context)
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
