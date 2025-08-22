@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import *
 from .forms import *
 from django.template.loader import render_to_string
@@ -9,10 +8,17 @@ import base64
 from io import BytesIO
 from weasyprint import HTML
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from captcha.fields import CaptchaField
+from django import forms
 
+class UserLoginForm(forms.Form):
+    username = forms.CharField(label="Username")
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    captcha = CaptchaField(required=False) 
 
+@login_required(login_url='login')
 def index(request):
     word = request.GET.get('word', '').strip()
     if word:
@@ -116,40 +122,33 @@ def car_pdf(request, pk):
     return response
 
 def login_views(request):
+    fail_count = request.session.get('fail_count', 0)
+
+    # Agar 3 martadan ko'p xato bo'lsa, captcha majburiy bo'ladi
+    class DynamicLoginForm(UserLoginForm):
+        if fail_count >= 3:
+            captcha = CaptchaField(required=True)
+
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = DynamicLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
 
-
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
-            messages.success(request, 'ok!')
-
-        else:
-            messages.error(request, 'Login yoki parol xato!')     
-            
-    form = UserLoginForm()
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                request.session['fail_count'] = 0  # Reset qilish
+                return redirect('index')
+            else:
+                # Xato login -> fail count oshirish
+                request.session['fail_count'] = fail_count + 1
+                messages.error(request, "Login yoki parol xato!")
+    else:
+        form = DynamicLoginForm()
 
     return render(request, 'login.html', {'form': form})
 
-@login_required(login_url='login')
-def index(request):
-    word = request.GET.get('word', '').strip()
-    if word:
-        car = Car.objects.filter(model__istartswith=word)
-    else:
-        car = Car.objects.all()
-    avtosalon = Avtosalon.objects.all()
-    brend = Brend.objects.all()
-    context = {
-        "avtosalon": avtosalon,
-        "brend": brend,
-        "car": car,
-        "title": "NEW TITLE"
-    }
-    return render(request, 'index.html', context)
 
 def logout_view(request):
     logout(request)

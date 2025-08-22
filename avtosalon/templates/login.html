@@ -103,18 +103,19 @@
   <body>
     <div class="login-container">
       <h2>Login</h2>
-
-      {% if messages %} {% for message in messages %}
-      <div
-        class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"
-      >
-        {{ message }}
-      </div>
-      {% endfor %} {% endif %}
-
       <form method="post">
-        {% csrf_token %} {{ form.as_p }}
+        {% csrf_token %}
+        <div>{{ form.username.label_tag }} {{ form.username }}</div>
+        <div>{{ form.password.label_tag }} {{ form.password }}</div>
+        {% if form.captcha %}
+        <div>{{ form.captcha.label_tag }} {{ form.captcha }}</div>
+        {% endif %}
         <button type="submit">Kirish</button>
+      </form>
+
+      {% for message in messages %}
+      <p style="color: red">{{ message }}</p>
+      {% endfor %}
       </form>
     </div>
   </body>
